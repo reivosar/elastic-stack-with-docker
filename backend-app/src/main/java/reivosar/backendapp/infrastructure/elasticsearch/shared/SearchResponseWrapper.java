@@ -7,18 +7,18 @@ import co.elastic.clients.elasticsearch.core.search.TotalHits;
 import java.util.Collections;
 import java.util.List;
 
-public record SearchResponseWrapper<TDocument> (SearchResponse<TDocument> response) {
+record SearchResponseWrapper<TDocument> (SearchResponse<TDocument> response) {
 
-	public boolean existsDocuments() {
+	boolean existsDocuments() {
 		return !notExistsDocuments();
 	}
 
-	public boolean notExistsDocuments() {
+	boolean notExistsDocuments() {
 		return (response == null) || (response.hits() == null) || (response.hits().total() == null)
 				|| (response.hits().total().value() == 0);
 	}
 
-	public long totalHitCount() {
+	long totalHitCount() {
 		if (notExistsDocuments()) {
 			return 0L;
 		}
@@ -29,7 +29,7 @@ public record SearchResponseWrapper<TDocument> (SearchResponse<TDocument> respon
 		return total.value();
 	}
 
-	public List<TDocument> toList() {
+	List<TDocument> toList() {
 		if (notExistsDocuments()) {
 			return Collections.emptyList();
 		}
