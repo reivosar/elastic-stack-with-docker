@@ -14,24 +14,22 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ElasticsearchConfig {
-    
-    @Bean
-    public ElasticsearchClient elasticsearchClient() {
-        
-        final BasicCredentialsProvider basicCredentialsProvider = new BasicCredentialsProvider();
-        basicCredentialsProvider.setCredentials(
-                AuthScope.ANY, new UsernamePasswordCredentials("elastic", "password")
-        );
-        
-        final RestClient restClient = RestClient
-                .builder(new HttpHost("localhost", 9200, "http"))
-                .setHttpClientConfigCallback(hc -> hc
-                        .setDefaultCredentialsProvider(basicCredentialsProvider)
-                )
-                .build();
-        
-        final ElasticsearchTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
-    
-        return new ElasticsearchClient(transport);
-    }
+
+	@Bean
+	public ElasticsearchClient elasticsearchClient() {
+
+		final BasicCredentialsProvider basicCredentialsProvider = new BasicCredentialsProvider();
+		basicCredentialsProvider.setCredentials(
+				AuthScope.ANY, new UsernamePasswordCredentials("elastic", "password"));
+
+		final RestClient restClient = RestClient
+				.builder(new HttpHost("localhost", 9200, "http"))
+				.setHttpClientConfigCallback(hc -> hc
+						.setDefaultCredentialsProvider(basicCredentialsProvider))
+				.build();
+
+		final ElasticsearchTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
+
+		return new ElasticsearchClient(transport);
+	}
 }

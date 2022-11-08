@@ -23,14 +23,14 @@ public class UserSearchAPI {
     }
     
     @PostMapping
-    public CreateUserIndexResponse create(@RequestBody CreateUserIndexRequest request) {
-        String result = userSearchService.create(request.name(), request.age());
+    public CreateUserIndexResponse create(@RequestBody final CreateUserIndexRequest request) {
+    	final String result = userSearchService.create(request.name(), request.age());
         return new CreateUserIndexResponse(result);
     }
     
     @GetMapping
-    public SearchUsersResponse search(@RequestBody SearchUsersRequest request) {
-        List<User> result = userSearchService.search(request.convertTo());
+    public SearchUsersResponse search(@RequestBody final SearchUsersRequest request) {
+    	final List<User> result = userSearchService.search(request.convertTo());
         return new SearchUsersResponse(result);
     }
 }
