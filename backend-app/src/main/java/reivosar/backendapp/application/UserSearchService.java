@@ -8,6 +8,6 @@ public interface UserSearchService {
     
     String create(final String name, final int age) throws SearchException;
     
-    List<User> search(UserSearchCriteria criteria) throws SearchException;
+    List<User> search(final UserSearchCriteria criteria) throws SearchException;
     
 }

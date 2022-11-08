@@ -18,19 +18,19 @@ public class ElasticsearchConfig {
     @Bean
     public ElasticsearchClient elasticsearchClient() {
         
-        BasicCredentialsProvider basicCredentialsProvider = new BasicCredentialsProvider();
+        final BasicCredentialsProvider basicCredentialsProvider = new BasicCredentialsProvider();
         basicCredentialsProvider.setCredentials(
                 AuthScope.ANY, new UsernamePasswordCredentials("elastic", "password")
         );
         
-        RestClient restClient = RestClient
+        final RestClient restClient = RestClient
                 .builder(new HttpHost("localhost", 9200, "http"))
                 .setHttpClientConfigCallback(hc -> hc
                         .setDefaultCredentialsProvider(basicCredentialsProvider)
                 )
                 .build();
         
-        ElasticsearchTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
+        final ElasticsearchTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
     
         return new ElasticsearchClient(transport);
     }
