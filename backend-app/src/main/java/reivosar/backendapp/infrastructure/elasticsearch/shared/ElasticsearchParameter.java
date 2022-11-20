@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
+import co.elastic.clients.elasticsearch._types.SortOptionsBuilders;
+import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.util.ObjectBuilder;
 
@@ -69,6 +71,7 @@ public class ElasticsearchParameter {
             this.setEqualQuery(query);
             this.setLikeQuery(query);
             this.setRangeQuery(query);
+            this.setSortQuery(query);
             return query;
         };
     }
@@ -98,10 +101,20 @@ public class ElasticsearchParameter {
     private void setRangeQuery(final co.elastic.clients.elasticsearch.core.SearchRequest.Builder query) {
         if (!this.ranges.isEmpty()) {
             query.query(rangeQuery -> {
-                ElasticsearchParameter.this.ranges.stream().filter(like -> like.valueSize() == 2).forEach(
+                ElasticsearchParameter.this.ranges.stream().filter(range -> range.valueSize() == 2).forEach(
                         range -> rangeQuery.range(t -> t.field(range.key().toString()).from(range.get(0).toString())
                                 .to(range.get(1).toString())));
                 return rangeQuery;
+            });
+        }
+    }
+
+    private void setSortQuery(final co.elastic.clients.elasticsearch.core.SearchRequest.Builder query) {
+        if (!this.sorts.isEmpty()) {
+            query.sort(sortQuery -> {
+                this.sorts.stream().filter(Pair::hasValues).forEach(sort -> SortOptionsBuilders.field()
+                        .field(this.index).order(SortOrder.valueOf(sort.firstValue().toString())));
+                return sortQuery;
             });
         }
     }
