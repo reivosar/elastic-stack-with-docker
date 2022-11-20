@@ -11,6 +11,7 @@ import reivosar.backendapp.application.UserSearchCriteria;
 import reivosar.backendapp.application.UserSearchService;
 import reivosar.backendapp.domain.User;
 import reivosar.backendapp.infrastructure.elasticsearch.shared.ElasticsearchClientWrapper;
+import reivosar.backendapp.infrastructure.elasticsearch.shared.ElasticsearchParameter;
 
 @Service
 public class ElasticUserSearchService implements UserSearchService {
@@ -38,7 +39,13 @@ public class ElasticUserSearchService implements UserSearchService {
     @Override
     public List<User> search(final UserSearchCriteria criteria) throws SearchException {
         try {
-            return this.elasticsearchClient.search(INDEX_NAME, User.class, criteria);
+            return this.elasticsearchClient.search(
+                    new ElasticsearchParameter.Builder(INDEX_NAME)
+                            .equal("id", criteria.id())
+                            .equal("name", criteria.name())
+                            .equal("age", criteria.age())
+                            .build(),
+                    User.class);
         } catch (final Exception e) {
             throw new SearchException("Search user error.", e);
         }

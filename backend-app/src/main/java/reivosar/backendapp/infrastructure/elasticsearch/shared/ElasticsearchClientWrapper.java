@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import reivosar.backendapp.application.SearchException;
-import reivosar.backendapp.application.UserSearchCriteria;
 
 @Service
 public class ElasticsearchClientWrapper {
@@ -31,17 +30,11 @@ public class ElasticsearchClientWrapper {
         }
     }
 
-    public <MODEL> List<MODEL> search(final String indexName, final Class<MODEL> mappingClass,
-            final UserSearchCriteria criteria) throws SearchException {
+    public <MODEL> List<MODEL> search(final ElasticsearchParameter criteria, final Class<MODEL> mappingClass)
+            throws SearchException {
         try {
             final SearchResponseWrapper<MODEL> response = new SearchResponseWrapper<>(
-                    this.elasticsearchClient.search(s -> s
-                            .index(indexName)
-                            .query(q -> q
-                                    .match(t -> t
-                                            .field("name")
-                                            .query(criteria.name()))),
-                            mappingClass));
+                    this.elasticsearchClient.search(criteria.query(), mappingClass));
             return response.toList();
         } catch (final IOException e) {
             throw new SearchException("Search user error.", e);
